@@ -7,6 +7,7 @@ import { Showcase } from "@/components/sections/Showcase";
 import { Experience } from "@/components/sections/Experience";
 import { CTA } from "@/components/sections/CTA";
 import { TrailerModal } from "@/components/sections/TrailerModal";
+import React, { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -21,7 +22,9 @@ export default function Home() {
         <CTA />
       </main>
       <Footer />
-      <TrailerModal />
+      <Suspense fallback={null}>
+        <TrailerModal />
+      </Suspense>
     </>
   );
 }
