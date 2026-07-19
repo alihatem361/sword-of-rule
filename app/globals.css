@@ -1,0 +1,297 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Sword of Rule — Design System
+   Palette distilled from the game's App Store key art:
+   royal plum voids · antique gold ornament · emerald & crimson
+   accents · warm parchment type. Preserved, not reinvented.
+   ============================================================ */
+
+@theme {
+  /* Core surfaces — near-black plum */
+  --color-void: #0a0611;
+  --color-abyss: #0e0818;
+  --color-plum-950: #140a22;
+  --color-plum-900: #1b0f2e;
+  --color-plum-800: #26143f;
+  --color-plum-700: #341a55;
+  --color-plum-600: #46236f;
+  --color-plum-500: #5b2d8c;
+  --color-plum-400: #7a44b0;
+
+  /* Antique gold — the ornament */
+  --color-gold-50: #fbf3dd;
+  --color-gold-100: #f6e3b3;
+  --color-gold-200: #f0d38a;
+  --color-gold-300: #e6bd63;
+  --color-gold-400: #d9a441;
+  --color-gold-500: #c68a2c;
+  --color-gold-600: #a56d22;
+  --color-gold-700: #7c5019;
+
+  /* Character accents */
+  --color-emerald-royal: #2f8f78;
+  --color-teal-royal: #268a8a;
+  --color-crimson-royal: #9a2a2a;
+  --color-crimson-bright: #c23b3b;
+
+  /* Parchment / text */
+  --color-parch-50: #f7f0e2;
+  --color-parch-100: #ece0c9;
+  --color-parch-200: #d8c7a6;
+  --color-parch-300: #b9a582;
+  --color-parch-400: #8f7c5c;
+
+  /* Fonts (wired via next/font in layout.tsx) */
+  --font-display: var(--font-cinzel), "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-amiri), "Times New Roman", serif;
+
+  /* Timing */
+  --ease-silk: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---- Base ---- */
+* {
+  border-color: color-mix(in oklab, var(--color-gold-400) 14%, transparent);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Keeps anchor-jumped sections clear of the fixed/floating navbar. */
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-parch-100);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-gold-400) 40%, transparent);
+  color: var(--color-parch-50);
+}
+
+/* Custom scrollbar — subtle, on-brand */
+::-webkit-scrollbar {
+  width: 11px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-void);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--color-plum-600), var(--color-plum-800));
+  border-radius: 99px;
+  border: 2px solid var(--color-void);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(var(--color-gold-600), var(--color-plum-700));
+}
+
+/* ============================================================
+   Reusable ornamental utilities
+   ============================================================ */
+
+/* Gold gradient text — the signet look */
+.text-gold-foil {
+  background: linear-gradient(
+    180deg,
+    var(--color-gold-100) 0%,
+    var(--color-gold-300) 38%,
+    var(--color-gold-500) 62%,
+    var(--color-gold-300) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+
+/* Faint hairline ornamental frame */
+.frame-gold {
+  position: relative;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--color-gold-400) 34%, transparent),
+    inset 0 0 0 4px color-mix(in oklab, var(--color-void) 60%, transparent),
+    inset 0 0 0 5px color-mix(in oklab, var(--color-gold-400) 16%, transparent);
+}
+
+/* Glass panel — used sparingly */
+.glass {
+  background: color-mix(in oklab, var(--color-plum-900) 55%, transparent);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid color-mix(in oklab, var(--color-gold-400) 18%, transparent);
+}
+
+/* Arabesque tessellation — CSS-drawn, no image weight */
+.arabesque {
+  background-image:
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0,
+      transparent 8px,
+      color-mix(in oklab, var(--color-gold-400) 5%, transparent) 8px,
+      color-mix(in oklab, var(--color-gold-400) 5%, transparent) 9px,
+      transparent 9px
+    ),
+    conic-gradient(
+      from 45deg at 50% 50%,
+      color-mix(in oklab, var(--color-gold-400) 4%, transparent) 0deg,
+      transparent 90deg,
+      color-mix(in oklab, var(--color-gold-400) 4%, transparent) 180deg,
+      transparent 270deg
+    );
+  background-size: 46px 46px, 46px 46px;
+}
+
+/* Fine grain to kill banding on big gradients */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+}
+
+/* Reveal underlay for scroll-in elements (no-JS fallback = visible) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Keyframes */
+@keyframes float-up {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-120px) translateX(var(--drift, 10px));
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes ripple {
+  to {
+    transform: translate(-50%, -50%) scale(2.4);
+    opacity: 0;
+  }
+}
+
+/*
+ * Masks the hard cut where the hero video's loop restarts (the source
+ * clip is a cinematic push-in, not a seamless loop). A brief dip to
+ * black right at the seam reads as an intentional cinematic beat
+ * instead of a jump. Duration is set inline to match the clip length.
+ */
+@keyframes video-loop-mask {
+  0% {
+    opacity: 1;
+  }
+  4% {
+    opacity: 0;
+  }
+  92% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Slow, GPU-accelerated infinite scroll for the showcase marquee. */
+@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes scroll-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(9px);
+    opacity: 1;
+  }
+}
+
+.animate-scroll-bob {
+  animation: scroll-bob 1.8s var(--ease-silk) infinite;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+/* Button sheen sweep */
+.sheen {
+  position: relative;
+  overflow: hidden;
+}
+.sheen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  transform: translateX(-160%) skewX(-18deg);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--color-parch-50) 55%, transparent),
+    transparent
+  );
+  transition: transform 0.9s var(--ease-silk);
+}
+.sheen:hover::before {
+  transform: translateX(320%) skewX(-18deg);
+}
