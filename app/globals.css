@@ -60,6 +60,12 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* Guard against horizontal overflow from full-bleed decorative blooms
+     (e.g. the centered blur glows in Showcase/Overview that extend past
+     the viewport on narrow screens). `clip` contains them without turning
+     html into a scroll container, so smooth-scroll/anchor jumps still work.
+     Paired with the body rule below since some browsers scroll on either. */
+  overflow-x: clip;
 }
 
 /* Keeps anchor-jumped sections clear of the fixed/floating navbar. */
@@ -74,7 +80,7 @@ body {
   font-feature-settings: "ss01", "cv01";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 ::selection {
