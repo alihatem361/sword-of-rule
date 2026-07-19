@@ -2,12 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  type Variants,
-} from "framer-motion";
+import { motion, useScroll, useTransform, type Variants } from "framer-motion";
 import { Play, ChevronDown, Apple, Star } from "lucide-react";
 import {
   GAME,
@@ -103,10 +98,10 @@ export function Hero({ onWatchTrailer }: { onWatchTrailer?: () => void }) {
       </motion.div>
 
       {/* Layered overlays: vignette + brand plum wash + bottom fade */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-void via-void/80 to-void/35" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-void via-void/10 to-void/60" />
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(120%_80%_at_20%_30%,transparent,rgba(10,6,17,0.55)_75%)]" />
-      <div className="arabesque absolute inset-0 -z-10 opacity-30" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-void via-void/52 to-void/14" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-void via-void/3 to-void/28" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(120%_80%_at_20%_30%,transparent,rgba(10,6,17,0.26)_75%)]" />
+      <div className="arabesque absolute inset-0 -z-10 opacity-10" />
 
       {/* Soft plum & gold light blooms */}
       <div className="animate-pulse-glow absolute -left-40 top-1/4 -z-10 h-[36rem] w-[36rem] rounded-full bg-plum-500/25 blur-[130px]" />
@@ -140,8 +135,7 @@ export function Hero({ onWatchTrailer }: { onWatchTrailer?: () => void }) {
               Sword
             </span>
             <span className="block">
-              of{" "}
-              <span className="italic text-parch-100">Rule</span>
+              of <span className="italic text-parch-100">Rule</span>
             </span>
           </motion.h1>
 
@@ -192,8 +186,8 @@ export function Hero({ onWatchTrailer }: { onWatchTrailer?: () => void }) {
                 ))}
               </div>
               <span className="text-sm text-parch-300">
-                <span className="font-semibold text-parch-100">4.2</span> · Free on the
-                App Store
+                <span className="font-semibold text-parch-100">4.2</span> · Free
+                on the App Store
               </span>
             </div>
             <div className="hidden h-8 w-px bg-gold-400/20 sm:block" />
