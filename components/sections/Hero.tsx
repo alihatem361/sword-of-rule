@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/Button";
 import { Particles } from "@/components/ui/Particles";
 import { StarMark } from "@/components/ui/Ornament";
 import { useReducedMotion } from "@/lib/useReducedMotion";
+
+import { TrailerButton } from "@/components/ui/TrailerButton";
 /** Matches the source clip's duration so the loop-mask dip lands on the seam. */
 const HERO_VIDEO_DURATION_S = 10;
 
@@ -157,14 +159,7 @@ export function Hero({ onWatchTrailer }: { onWatchTrailer?: () => void }) {
             >
               Play Now — Free
             </Button>
-            <Button
-              variant="ghost"
-              icon={<Play className="h-4 w-4 fill-current" />}
-              className="text-base"
-              onClick={onWatchTrailer}
-            >
-              Watch Trailer
-            </Button>
+            <TrailerButton className="px-6 py-4 text-lg" />{" "}
           </motion.div>
 
           {/* Trust strip */}

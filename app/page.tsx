@@ -1,6 +1,3 @@
-"use client";
-
-import { useState, useCallback } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
@@ -12,15 +9,11 @@ import { CTA } from "@/components/sections/CTA";
 import { TrailerModal } from "@/components/sections/TrailerModal";
 
 export default function Home() {
-  const [trailerOpen, setTrailerOpen] = useState(false);
-  const openTrailer = useCallback(() => setTrailerOpen(true), []);
-  const closeTrailer = useCallback(() => setTrailerOpen(false), []);
-
   return (
     <>
-      <Navbar onWatchTrailer={openTrailer} />
+      <Navbar />
       <main id="content">
-        <Hero onWatchTrailer={openTrailer} />
+        <Hero />
         <Overview />
         <Features />
         <Showcase />
@@ -28,7 +21,7 @@ export default function Home() {
         <CTA />
       </main>
       <Footer />
-      <TrailerModal open={trailerOpen} onClose={closeTrailer} />
+      <TrailerModal />
     </>
   );
 }

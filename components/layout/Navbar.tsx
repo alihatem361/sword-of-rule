@@ -7,6 +7,7 @@ import { NAV_LINKS, APP_STORE_URL } from "@/lib/content";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+import { TrailerButton } from "../ui/TrailerButton";
 
 export function Navbar({ onWatchTrailer }: { onWatchTrailer?: () => void }) {
   const [scrolled, setScrolled] = useState(false);
@@ -60,14 +61,7 @@ export function Navbar({ onWatchTrailer }: { onWatchTrailer?: () => void }) {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Button
-            variant="ghost"
-            icon={<Play className="h-4 w-4 fill-current" />}
-            className="px-5 py-3"
-            onClick={onWatchTrailer}
-          >
-            Trailer
-          </Button>
+          <TrailerButton className="px-5 py-3">Trailer</TrailerButton>
           <Button
             href={APP_STORE_URL}
             icon={<Download className="h-4 w-4" />}
