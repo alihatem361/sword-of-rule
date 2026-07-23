@@ -10,14 +10,23 @@ import { CornerFlourish } from "@/components/ui/Ornament";
 import { DeviceFrame } from "@/components/ui/DeviceFrame";
 import { Marquee } from "@/components/ui/Marquee";
 import { Lightbox } from "@/components/ui/Lightbox";
-import { SCREENS } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 // Indices into SCREENS used for the large bento frames.
 const FEATURED_INDEX = 1; // Warlords
 const SECONDARY_INDICES = [2, 3]; // Siegecraft, Cavalry
 
+type ShowcaseScreen = {
+  src: string;
+  alt: string;
+  label: string;
+  caption: string;
+};
+
 export function Showcase() {
+  const { copy } = useLanguage();
+  const screens = copy.showcase.screens;
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -40,9 +49,9 @@ export function Showcase() {
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
-          eyebrow="Chapter 03 · Meet the Heroes"
-          title="Every screen tells a story"
-          description="Captured straight from the live game — a capital under siege, warlords sworn to your banner, and the horde always one march away."
+          eyebrow={copy.showcase.eyebrow}
+          title={copy.showcase.title}
+          description={copy.showcase.description}
         />
 
         {/* Cinematic bento — large featured frame + two secondary frames */}
@@ -50,14 +59,23 @@ export function Showcase() {
           <FeaturedFrame
             ref={featuredRef}
             style={{ y: featuredY }}
-            screen={SCREENS[FEATURED_INDEX]}
+            screen={screens[FEATURED_INDEX]}
+            featuredLabel={copy.showcase.featured}
+            expandLabel={copy.showcase.expandLabel}
             onOpen={() => openAt(FEATURED_INDEX)}
           />
 
-          <Stagger className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1" staggerChildren={0.12}>
+          <Stagger
+            className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1"
+            staggerChildren={0.12}
+          >
             {SECONDARY_INDICES.map((idx) => (
               <StaggerItem key={idx}>
-                <SecondaryFrame screen={SCREENS[idx]} onOpen={() => openAt(idx)} />
+                <SecondaryFrame
+                  screen={screens[idx]}
+                  expandLabel={copy.showcase.expandLabel}
+                  onOpen={() => openAt(idx)}
+                />
               </StaggerItem>
             ))}
           </Stagger>
@@ -69,21 +87,21 @@ export function Showcase() {
         <div className="mb-8 flex items-center gap-4 px-5 sm:px-8">
           <span className="h-px flex-1 bg-gradient-to-r from-transparent to-gold-400/25" />
           <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.28em] text-parch-400">
-            Browse every frame
+            {copy.showcase.browseEveryFrame}
           </span>
           <span className="h-px flex-1 bg-gradient-to-l from-transparent to-gold-400/25" />
         </div>
 
         <Marquee
-          items={SCREENS}
+          items={screens}
           durationS={48}
           itemClassName="w-40 sm:w-48"
           renderItem={(screen) => {
-            const index = SCREENS.indexOf(screen);
+            const index = screens.indexOf(screen);
             return (
               <button
                 onClick={() => openAt(index)}
-                aria-label={`Expand ${screen.label}`}
+                aria-label={copy.showcase.expandLabel(screen.label)}
                 className="group block w-full transition-transform duration-500 hover:-translate-y-1.5"
               >
                 <DeviceFrame
@@ -102,7 +120,7 @@ export function Showcase() {
       </Reveal>
 
       <Lightbox
-        screens={SCREENS}
+        screens={screens}
         activeIndex={activeIndex}
         open={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
@@ -116,10 +134,14 @@ function FeaturedFrame({
   screen,
   onOpen,
   style,
+  featuredLabel,
+  expandLabel,
   ref,
 }: {
-  screen: (typeof SCREENS)[number];
+  screen: ShowcaseScreen;
   onOpen: () => void;
+  featuredLabel: string;
+  expandLabel: (label: string) => string;
   style?: React.ComponentProps<typeof motion.div>["style"];
   ref?: React.Ref<HTMLButtonElement>;
 }) {
@@ -128,7 +150,7 @@ function FeaturedFrame({
       <button
         ref={ref}
         onClick={onOpen}
-        aria-label={`Expand ${screen.label}`}
+        aria-label={expandLabel(screen.label)}
         className="frame-gold group relative block h-full min-h-[420px] w-full overflow-hidden rounded-3xl text-left sm:min-h-[540px]"
       >
         <motion.div style={style} className="absolute inset-0 scale-110">
@@ -149,7 +171,7 @@ function FeaturedFrame({
         <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 sm:p-8">
           <div>
             <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold-300/80">
-              Featured
+              {featuredLabel}
             </span>
             <p className="mt-1.5 font-display text-2xl font-semibold text-parch-50 sm:text-3xl">
               {screen.label}
@@ -168,14 +190,16 @@ function FeaturedFrame({
 function SecondaryFrame({
   screen,
   onOpen,
+  expandLabel,
 }: {
-  screen: (typeof SCREENS)[number];
+  screen: ShowcaseScreen;
   onOpen: () => void;
+  expandLabel: (label: string) => string;
 }) {
   return (
     <button
       onClick={onOpen}
-      aria-label={`Expand ${screen.label}`}
+      aria-label={expandLabel(screen.label)}
       className={cn(
         "group relative block h-full min-h-[200px] w-full overflow-hidden rounded-2xl border border-gold-400/15 sm:min-h-[255px]",
       )}

@@ -5,11 +5,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { TRAILER_VIDEO_SRC, TRAILER_POSTER_SRC } from "@/lib/content";
 import { useSearchParams, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 /** Fullscreen popup that plays the real cinematic clip, with sound. */
 export function TrailerModal() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { copy, isArabic } = useLanguage();
 
   const isOpen = searchParams.get("trailer") === "true";
 
@@ -54,12 +57,15 @@ export function TrailerModal() {
           className="fixed inset-0 z-[95] flex items-center justify-center bg-void/92 p-4 backdrop-blur-lg"
           role="dialog"
           aria-modal="true"
-          aria-label="Official trailer"
+          aria-label={copy.trailer.ariaLabel}
         >
           <button
             onClick={closeModal}
-            className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full border border-gold-400/25 bg-plum-900/70 text-parch-100 transition hover:border-gold-400/60 hover:text-gold-300"
-            aria-label="Close trailer"
+            className={cn(
+              "absolute top-5 flex h-11 w-11 items-center justify-center rounded-full border border-gold-400/25 bg-plum-900/70 text-parch-100 transition hover:border-gold-400/60 hover:text-gold-300",
+              isArabic ? "left-5" : "right-5",
+            )}
+            aria-label={copy.trailer.closeLabel}
           >
             <X className="h-5 w-5" />
           </button>

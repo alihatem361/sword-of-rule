@@ -7,5 +7,5 @@ next-env.d.ts
 .env*
 .DS_Store
 Screenshots
-
+.claude 
 .vercel

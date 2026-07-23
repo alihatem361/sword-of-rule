@@ -4,6 +4,7 @@ import { Hero } from "@/components/sections/Hero";
 import { Overview } from "@/components/sections/Overview";
 import { Features } from "@/components/sections/Features";
 import { Showcase } from "@/components/sections/Showcase";
+import { Characters } from "@/components/sections/Characters";
 import { Experience } from "@/components/sections/Experience";
 import { CTA } from "@/components/sections/CTA";
 import { TrailerModal } from "@/components/sections/TrailerModal";
@@ -18,6 +19,7 @@ export default function Home() {
         <Overview />
         <Features />
         <Showcase />
+        <Characters />
         <Experience />
         <CTA />
       </main>

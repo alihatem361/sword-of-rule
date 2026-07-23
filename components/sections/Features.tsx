@@ -1,29 +1,32 @@
 "use client";
 
+import type { ComponentType } from "react";
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Stagger, StaggerItem } from "@/components/motion/Reveal";
-import { FEATURES, type Feature } from "@/lib/content";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export function Features() {
+  const { copy } = useLanguage();
+
   return (
     <section id="features" className="relative py-28 sm:py-36">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/25 to-transparent" />
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
-          eyebrow="Chapter 02 · The Instruments of Rule"
-          title="Four ways to command the age"
-          description="Every system is built to reward the ruler who thinks three moves ahead — from the first foundation stone to the final siege."
+          eyebrow={copy.features.eyebrow}
+          title={copy.features.title}
+          description={copy.features.description}
         />
 
         <Stagger
           className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
           staggerChildren={0.1}
         >
-          {FEATURES.map((feature) => (
+          {copy.features.items.map((feature, index) => (
             <StaggerItem key={feature.title}>
-              <FeatureCard feature={feature} />
+              <FeatureCard feature={feature} index={index} />
             </StaggerItem>
           ))}
         </Stagger>
@@ -32,7 +35,18 @@ export function Features() {
   );
 }
 
-function FeatureCard({ feature }: { feature: Feature }) {
+function FeatureCard({
+  feature,
+  index,
+}: {
+  feature: {
+    icon: ComponentType<{ className?: string }>;
+    title: string;
+    description: string;
+    accent: string;
+  };
+  index: number;
+}) {
   const Icon = feature.icon;
   return (
     <motion.article
@@ -46,9 +60,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
         style={{ background: feature.accent }}
       />
       {/* top hairline that lights up */}
-      <span
-        className="absolute inset-x-0 top-0 h-px scale-x-0 bg-gradient-to-r from-transparent via-gold-300 to-transparent transition-transform duration-500 group-hover:scale-x-100"
-      />
+      <span className="absolute inset-x-0 top-0 h-px scale-x-0 bg-gradient-to-r from-transparent via-gold-300 to-transparent transition-transform duration-500 group-hover:scale-x-100" />
 
       <div className="relative">
         <div
@@ -68,7 +80,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
 
       {/* number watermark */}
       <span className="pointer-events-none absolute bottom-3 right-4 font-display text-6xl font-bold text-gold-400/[0.06] transition-colors duration-500 group-hover:text-gold-400/10">
-        {FEATURES.indexOf(feature) + 1}
+        {index + 1}
       </span>
     </motion.article>
   );

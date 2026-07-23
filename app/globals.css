@@ -45,7 +45,9 @@
   /* Fonts (wired via next/font in layout.tsx) */
   --font-display: var(--font-cinzel), "Times New Roman", serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-arabic: var(--font-amiri), "Times New Roman", serif;
+  --font-arabic: var(--font-tajawal), "Segoe UI", Tahoma, sans-serif;
+  --font-arabic-display:
+    var(--font-amiri), var(--font-tajawal), "Times New Roman", serif;
 
   /* Timing */
   --ease-silk: cubic-bezier(0.22, 1, 0.36, 1);
@@ -54,18 +56,68 @@
 
 /* ---- Base ---- */
 * {
-  border-color: color-mix(in oklab, var(--color-gold-400) 14%, transparent);
+  border-color: rgba(217, 164, 65, 0.14);
 }
 
 html {
   scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
   /* Guard against horizontal overflow from full-bleed decorative blooms
      (e.g. the centered blur glows in Showcase/Overview that extend past
      the viewport on narrow screens). `clip` contains them without turning
      html into a scroll container, so smooth-scroll/anchor jumps still work.
      Paired with the body rule below since some browsers scroll on either. */
   overflow-x: clip;
+}
+
+html[data-lang="ar"] {
+  direction: rtl;
+}
+
+html[data-lang="ar"] body {
+  font-family: var(--font-arabic);
+  /* Arabic script sits taller and needs more breathing room between lines
+     to stay legible at the same visual weight as the Latin type. */
+  line-height: 1.85;
+  letter-spacing: 0;
+}
+
+/* Arabic headings use an elegant naskh serif instead of Cinzel (Latin-only),
+   so display type keeps its ornamental weight in RTL. */
+html[data-lang="ar"] .font-display {
+  font-family: var(--font-arabic-display);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+/* Letter-spacing (tracking) breaks Arabic's cursive letter-joining, turning
+   words into disconnected glyphs. Neutralise every tracking utility in RTL
+   and lean on weight + size for the same typographic rhythm instead. */
+html[data-lang="ar"] [class*="tracking-"] {
+  letter-spacing: 0 !important;
+}
+
+/* Uppercasing is meaningless for Arabic — restore natural casing on the
+   eyebrow/label utilities that force it for Latin. */
+html[data-lang="ar"] .uppercase {
+  text-transform: none;
+}
+
+/* Nudge the small caps-style eyebrows a touch larger so they don't read as
+   cramped once the wide tracking is removed. */
+html[data-lang="ar"] .text-xs {
+  font-size: 0.82rem;
+}
+html[data-lang="ar"] .text-\[10px\],
+html[data-lang="ar"] .text-\[11px\] {
+  font-size: 0.72rem;
+}
+
+html[dir="rtl"] .text-left {
+  text-align: left;
+}
+
+html[dir="rtl"] .text-right {
+  text-align: right;
 }
 
 /* Keeps anchor-jumped sections clear of the fixed/floating navbar. */
@@ -135,9 +187,9 @@ body {
 /* Glass panel — used sparingly */
 .glass {
   background: color-mix(in oklab, var(--color-plum-900) 55%, transparent);
-  backdrop-filter: blur(16px) saturate(1.2);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
-  border: 1px solid color-mix(in oklab, var(--color-gold-400) 18%, transparent);
+  backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid rgba(217, 164, 65, 0.18);
 }
 
 /* Arabesque tessellation — CSS-drawn, no image weight */
@@ -158,7 +210,9 @@ body {
       color-mix(in oklab, var(--color-gold-400) 4%, transparent) 180deg,
       transparent 270deg
     );
-  background-size: 46px 46px, 46px 46px;
+  background-size:
+    46px 46px,
+    46px 46px;
 }
 
 /* Fine grain to kill banding on big gradients */

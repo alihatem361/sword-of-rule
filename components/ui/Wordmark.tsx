@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { GAME } from "@/lib/content";
+import { useLanguage } from "../layout/LanguageProvider";
 
 /**
  * The lockup: a crossed-swords crest + the English wordmark, with the
@@ -21,6 +22,8 @@ export function Wordmark({
     lg: { crest: 44, title: "text-2xl", sub: "text-xs" },
   }[size];
 
+  const { isArabic } = useLanguage();
+
   return (
     <span className={cn("flex items-center gap-3", className)}>
       <Crest size={dims.crest} />
@@ -38,7 +41,7 @@ export function Wordmark({
             dir="rtl"
             lang="ar"
             className={cn(
-              "mt-1 font-arabic tracking-wide text-gold-300/70",
+              "mt-1 font-arabic tracking-wide text-gold-300/70 text-right",
               dims.sub,
             )}
           >
@@ -76,7 +79,14 @@ function Crest({ size }: { size: number }) {
         strokeWidth="1.5"
         fill="var(--color-plum-900)"
       />
-      <circle cx="24" cy="24" r="17.5" stroke="url(#crest-gold)" strokeWidth="0.75" strokeOpacity="0.45" />
+      <circle
+        cx="24"
+        cy="24"
+        r="17.5"
+        stroke="url(#crest-gold)"
+        strokeWidth="0.75"
+        strokeOpacity="0.45"
+      />
       {/* crescent — a nod to the game's setting */}
       <path
         d="M32.5 11 A15 15 0 1 0 32.5 37 A12 12 0 1 1 32.5 11 Z"

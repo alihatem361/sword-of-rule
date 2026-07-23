@@ -6,10 +6,11 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { OrnamentDivider, CornerFlourish } from "@/components/ui/Ornament";
-import { STATS } from "@/lib/content";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export function Overview() {
   const ref = useRef<HTMLDivElement>(null);
+  const { copy } = useLanguage();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
@@ -17,10 +18,7 @@ export function Overview() {
   const imgY = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
 
   return (
-    <section
-      id="overview"
-      className="relative overflow-hidden py-28 sm:py-36"
-    >
+    <section id="overview" className="relative overflow-hidden py-28 sm:py-36">
       {/* section wash */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/30 to-transparent" />
       <div className="absolute -right-40 top-20 -z-10 h-[34rem] w-[34rem] rounded-full bg-plum-600/15 blur-[140px]" />
@@ -30,10 +28,13 @@ export function Overview() {
         <div ref={ref} className="relative order-last lg:order-first">
           <Reveal direction="right" amount={0.2}>
             <div className="frame-gold relative overflow-hidden rounded-3xl">
-              <motion.div style={{ y: imgY }} className="relative aspect-[4/5] scale-110">
+              <motion.div
+                style={{ y: imgY }}
+                className="relative aspect-[4/5] scale-110"
+              >
                 <Image
                   src="/screens/kingdom.webp"
-                  alt="A fortified desert capital watched over by a veiled court sorceress"
+                  alt={copy.overview.alt}
                   fill
                   sizes="(max-width: 1024px) 90vw, 560px"
                   className="object-cover"
@@ -51,10 +52,10 @@ export function Overview() {
           <Reveal direction="up" delay={0.2}>
             <div className="glass absolute -bottom-6 -right-4 hidden rounded-2xl px-6 py-4 sm:block">
               <p className="font-display text-3xl font-bold text-gold-foil">
-                {STATS[0].value}
+                4.2★
               </p>
               <p className="text-xs uppercase tracking-widest text-parch-300">
-                {STATS[0].label}
+                {copy.overview.statLabel}
               </p>
             </div>
           </Reveal>
@@ -64,34 +65,17 @@ export function Overview() {
         <div>
           <SectionHeading
             align="left"
-            eyebrow="Chapter 01 · Discover the Kingdom"
-            title="An empire is only as strong as the ruler who defends it"
+            eyebrow={copy.overview.eyebrow}
+            title={copy.overview.title}
           />
           <div className="mt-8 space-y-5 text-base leading-relaxed text-parch-200 sm:text-lg">
-            <Reveal direction="up">
-              <p>
-                The year is dark. From the eastern steppe, the{" "}
-                <span className="text-gold-200">Tatar horde</span> pours across
-                the frontier — faster, hungrier and more numerous than any army
-                the caliphate has faced. Cities that stood for centuries fall in
-                a single night.
-              </p>
-            </Reveal>
-            <Reveal direction="up" delay={0.1}>
-              <p>
-                You inherit a single walled town and an impossible task: survive.
-                Raise farms and forges, drill archers and camelry, and summon the
-                warlords whose names still echo through history. Every stone you
-                lay, every alliance you forge, is a wager against the storm.
-              </p>
-            </Reveal>
-            <Reveal direction="up" delay={0.2}>
-              <p className="text-parch-300">
-                This is not a game of luck. It is a game of{" "}
-                <span className="font-medium text-parch-50">rule</span> — of
-                foresight, economy and iron will.
-              </p>
-            </Reveal>
+            {copy.overview.paragraphs.map((paragraph, index) => (
+              <Reveal key={paragraph} direction="up" delay={index * 0.1}>
+                <p className={index === 2 ? "text-parch-300" : undefined}>
+                  {paragraph}
+                </p>
+              </Reveal>
+            ))}
           </div>
 
           <Reveal direction="up" delay={0.25}>

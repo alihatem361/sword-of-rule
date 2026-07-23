@@ -5,6 +5,8 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Screen } from "@/lib/content";
+import { cn } from "@/lib/utils";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 type LightboxProps = {
   screens: Screen[];
@@ -26,6 +28,7 @@ export function Lightbox({
   onClose,
   onNavigate,
 }: LightboxProps) {
+  const { isArabic } = useLanguage();
   const paginate = useCallback(
     (step: number) => {
       onNavigate((activeIndex + step + screens.length) % screens.length);
@@ -63,12 +66,15 @@ export function Lightbox({
           onClick={onClose}
           role="dialog"
           aria-modal="true"
-          aria-label={`${current.label} — full view`}
+          aria-label={`${current.label} — ${isArabic ? "عرض كامل" : "full view"}`}
         >
           <button
             onClick={onClose}
-            className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full border border-gold-400/25 bg-plum-900/70 text-parch-100 transition hover:border-gold-400/60 hover:text-gold-300"
-            aria-label="Close"
+            className={cn(
+              "absolute top-5 flex h-11 w-11 items-center justify-center rounded-full border border-gold-400/25 bg-plum-900/70 text-parch-100 transition hover:border-gold-400/60 hover:text-gold-300",
+              isArabic ? "left-5" : "right-5",
+            )}
+            aria-label={isArabic ? "إغلاق" : "Close"}
           >
             <X className="h-5 w-5" />
           </button>
@@ -78,10 +84,17 @@ export function Lightbox({
               e.stopPropagation();
               paginate(-1);
             }}
-            className="absolute left-3 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gold-400/25 bg-plum-900/70 text-parch-100 transition hover:border-gold-400/60 hover:text-gold-300 sm:left-8"
-            aria-label="Previous"
+            className={cn(
+              "absolute top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gold-400/25 bg-plum-900/70 text-parch-100 transition hover:border-gold-400/60 hover:text-gold-300",
+              isArabic ? "right-3 sm:right-8" : "left-3 sm:left-8",
+            )}
+            aria-label={isArabic ? "السابق" : "Previous"}
           >
-            <ChevronLeft className="h-6 w-6" />
+            {isArabic ? (
+              <ChevronRight className="h-6 w-6" />
+            ) : (
+              <ChevronLeft className="h-6 w-6" />
+            )}
           </button>
 
           <AnimatePresence initial={false} mode="wait">
@@ -103,7 +116,9 @@ export function Lightbox({
                 className="rounded-2xl border border-gold-400/25 object-contain shadow-2xl"
               />
               <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 whitespace-nowrap text-center">
-                <p className="font-display text-lg text-parch-50">{current.label}</p>
+                <p className="font-display text-lg text-parch-50">
+                  {current.label}
+                </p>
                 <p className="text-sm text-parch-300">{current.caption}</p>
               </div>
             </motion.div>
@@ -114,10 +129,17 @@ export function Lightbox({
               e.stopPropagation();
               paginate(1);
             }}
-            className="absolute right-3 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gold-400/25 bg-plum-900/70 text-parch-100 transition hover:border-gold-400/60 hover:text-gold-300 sm:right-8"
-            aria-label="Next"
+            className={cn(
+              "absolute top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gold-400/25 bg-plum-900/70 text-parch-100 transition hover:border-gold-400/60 hover:text-gold-300",
+              isArabic ? "left-3 sm:left-8" : "right-3 sm:right-8",
+            )}
+            aria-label={isArabic ? "التالي" : "Next"}
           >
-            <ChevronRight className="h-6 w-6" />
+            {isArabic ? (
+              <ChevronLeft className="h-6 w-6" />
+            ) : (
+              <ChevronRight className="h-6 w-6" />
+            )}
           </button>
         </motion.div>
       )}

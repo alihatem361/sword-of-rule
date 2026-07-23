@@ -5,8 +5,6 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, type Variants } from "framer-motion";
 import { Play, ChevronDown, Apple, Star } from "lucide-react";
 import {
-  GAME,
-  STATS,
   APP_STORE_URL,
   TRAILER_VIDEO_SRC as HERO_VIDEO_SRC,
   TRAILER_POSTER_SRC as HERO_POSTER_SRC,
@@ -17,6 +15,8 @@ import { StarMark } from "@/components/ui/Ornament";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
 import { TrailerButton } from "@/components/ui/TrailerButton";
+import { useLanguage } from "@/components/layout/LanguageProvider";
+import { cn } from "@/lib/utils";
 /** Matches the source clip's duration so the loop-mask dip lands on the seam. */
 const HERO_VIDEO_DURATION_S = 10;
 
@@ -37,6 +37,7 @@ export function Hero({ onWatchTrailer }: { onWatchTrailer?: () => void }) {
   const ref = useRef<HTMLElement>(null);
   const [videoFailed, setVideoFailed] = useState(false);
   const reducedMotion = useReducedMotion();
+  const { copy, isArabic } = useLanguage();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -120,54 +121,84 @@ export function Hero({ onWatchTrailer }: { onWatchTrailer?: () => void }) {
           variants={container}
           initial="hidden"
           animate="visible"
-          className="max-w-2xl"
+          className={cn(
+            "max-w-2xl",
+            isArabic && "ml-auto  sm:ml-auto",
+          )}
         >
           <motion.div variants={item}>
             <span className="inline-flex items-center gap-2.5 rounded-full border border-gold-400/25 bg-plum-900/50 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.28em] text-gold-200 backdrop-blur-sm">
               <StarMark className="h-3 w-3" />
-              {GAME.era}
+              {copy.hero.badge}
             </span>
           </motion.div>
 
           <motion.h1
             variants={item}
-            className="mt-7 font-display text-5xl font-bold leading-[0.98] text-parch-50 sm:text-7xl lg:text-8xl"
+            className={cn(
+              "mt-7 font-display text-5xl font-bold leading-[0.98] text-parch-50 sm:text-7xl lg:text-8xl",
+              isArabic &&
+                "font-arabic text-[clamp(2.7rem,5vw,4.6rem)] leading-[1.15]",
+            )}
           >
             <span className="block text-gold-foil drop-shadow-[0_2px_20px_rgba(217,164,65,0.25)]">
-              Sword
+              {copy.hero.titleLine1}
             </span>
             <span className="block">
-              of <span className="italic text-parch-100">Rule</span>
+              {isArabic ? (
+                copy.hero.titleLine2
+              ) : (
+                <>
+                  of{" "}
+                  <span className="italic text-parch-100">
+                    {copy.hero.titleLine2}
+                  </span>
+                </>
+              )}
             </span>
           </motion.h1>
 
           <motion.p
             variants={item}
-            className="mt-6 max-w-xl text-base leading-relaxed text-parch-200 sm:text-lg"
+            className={cn(
+              "mt-6 max-w-xl text-base leading-relaxed text-parch-200 sm:text-lg",
+              isArabic && "font-arabic text-parch-100/95",
+            )}
           >
-            {GAME.descriptionShort}
+            {copy.hero.description}
           </motion.p>
 
           <motion.div
             variants={item}
-            className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center"
+            className={cn(
+              "mt-10 flex flex-col gap-4 sm:flex-row sm:items-center",
+              isArabic && "sm:flex-row-reverse justify-end",
+            )}
           >
             <Button
               href={APP_STORE_URL}
               icon={<Apple className="h-5 w-5" />}
               className="text-base"
             >
-              Play Now — Free
+              {copy.hero.playNow}
             </Button>
-            <TrailerButton className="px-6 py-4 text-lg" />{" "}
+            <TrailerButton className="px-6 py-4 text-lg" />
           </motion.div>
 
           {/* Trust strip */}
           <motion.div
             variants={item}
-            className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4"
+            className={cn(
+              "mt-12 flex flex-wrap items-center gap-x-8 gap-y-4",
+              isArabic && "justify-start",
+            )}
           >
-            <div className="flex items-center gap-2">
+            <div
+              className={cn(
+                "flex items-center gap-2",
+                isArabic && "flex-row-reverse",
+              )}
+            >
               <div className="flex" aria-hidden="true">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
@@ -181,13 +212,16 @@ export function Hero({ onWatchTrailer }: { onWatchTrailer?: () => void }) {
                 ))}
               </div>
               <span className="text-sm text-parch-300">
-                <span className="font-semibold text-parch-100">4.2</span> · Free
-                on the App Store
+                <span className="font-semibold text-parch-100">4.2</span> ·{" "}
+                {copy.hero.ratingLabel}
               </span>
             </div>
             <div className="hidden h-8 w-px bg-gold-400/20 sm:block" />
-            <div className="flex gap-6">
-              {STATS.slice(2).map((s) => (
+            <div className={cn("flex gap-6", isArabic && "flex-row-reverse")}>
+              {[
+                { value: "120+", label: copy.cta.statsLabels[2] },
+                { value: "24/7", label: copy.cta.statsLabels[3] },
+              ].map((s) => (
                 <div key={s.label} className="flex flex-col">
                   <span className="font-display text-lg font-semibold text-parch-50">
                     {s.value}
@@ -209,7 +243,9 @@ export function Hero({ onWatchTrailer }: { onWatchTrailer?: () => void }) {
         transition={{ delay: 1.4, duration: 1 }}
         className="absolute bottom-7 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-parch-300"
       >
-        <span className="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
+        <span className="text-[10px] uppercase tracking-[0.3em]">
+          {copy.hero.scroll}
+        </span>
         <span className="flex h-9 w-[22px] justify-center rounded-full border border-gold-400/40 pt-1.5">
           <span className="animate-scroll-bob">
             <ChevronDown className="h-3 w-3 text-gold-300" />

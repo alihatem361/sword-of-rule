@@ -42,7 +42,14 @@ export function Marquee<T>({
     ));
 
   return (
-    <div className={cn("group relative w-full overflow-hidden", className)}>
+    // Force LTR so the translateX loop animates identically regardless of the
+    // page direction — in RTL the flex order + transform would otherwise flip
+    // and break the seamless loop. Individual item text still renders per its
+    // own Unicode bidi, so Arabic labels stay correct.
+    <div
+      dir="ltr"
+      className={cn("group relative w-full overflow-hidden", className)}
+    >
       {/* edge fades so the strip dissolves into the section background */}
       <div
         aria-hidden="true"

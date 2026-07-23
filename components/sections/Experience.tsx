@@ -5,8 +5,8 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
-import { PILLARS, CHAPTERS } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 // Chapter → screenshot pairing (kept here so content.ts stays view-agnostic)
 const CHAPTER_IMAGES = [
@@ -17,6 +17,8 @@ const CHAPTER_IMAGES = [
 ];
 
 export function Experience() {
+  const { copy } = useLanguage();
+
   return (
     <section id="experience" className="relative py-28 sm:py-36">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/25 to-transparent" />
@@ -24,17 +26,20 @@ export function Experience() {
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
-          eyebrow="Chapter 04 · Experience the Battles"
-          title="Depth in every direction"
-          description="Seven interlocking systems turn a simple town into a living empire. Master them in any order — they all bend toward conquest."
+          eyebrow={copy.experience.eyebrow}
+          title={copy.experience.title}
+          description={copy.experience.description}
         />
 
         {/* Pillars — bento grid */}
-        <Stagger className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" staggerChildren={0.08}>
-          {PILLARS.map((pillar, i) => {
+        <Stagger
+          className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          staggerChildren={0.08}
+        >
+          {copy.experience.pillars.map((pillar, i) => {
             const Icon = pillar.icon;
             // give the grid rhythm: first & last span wider on large screens
-            const wide = i === 0 || i === PILLARS.length - 1;
+            const wide = i === 0 || i === copy.experience.pillars.length - 1;
             return (
               <StaggerItem
                 key={pillar.title}
@@ -63,20 +68,30 @@ export function Experience() {
           <Reveal direction="up">
             <div className="flex items-center gap-4">
               <h3 className="font-display text-2xl font-semibold text-parch-50 sm:text-3xl">
-                The road to empire
+                {copy.experience.roadTitle}
               </h3>
               <span className="h-px flex-1 bg-gradient-to-r from-gold-400/40 to-transparent" />
             </div>
           </Reveal>
 
-          <ProgressionTimeline />
+          <ProgressionTimeline chapters={copy.experience.chapters} />
         </div>
       </div>
     </section>
   );
 }
 
-function ProgressionTimeline() {
+function ProgressionTimeline({
+  chapters,
+}: {
+  chapters: {
+    index: string;
+    kicker: string;
+    title: string;
+    body: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }[];
+}) {
   const [active, setActive] = useState(0);
 
   return (
@@ -84,16 +99,21 @@ function ProgressionTimeline() {
       {/* Steps */}
       <ol className="relative space-y-2">
         {/* vertical rail */}
-        <span className="absolute left-[27px] top-2 bottom-2 w-px bg-gold-400/15" aria-hidden />
+        <span
+          className="absolute left-[27px] top-2 bottom-2 w-px bg-gold-400/15"
+          aria-hidden
+        />
         <motion.span
           className="absolute left-[27px] top-2 w-px bg-gradient-to-b from-gold-300 to-gold-500"
           aria-hidden
-          animate={{ height: `${(active / (CHAPTERS.length - 1)) * 100}%` }}
+          animate={{
+            height: `${(active / (chapters.length - 1)) * 100}%`,
+          }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           style={{ maxHeight: "calc(100% - 1rem)" }}
         />
 
-        {CHAPTERS.map((ch, i) => {
+        {chapters.map((ch, i) => {
           const Icon = ch.icon;
           const isActive = i === active;
           return (
@@ -166,7 +186,7 @@ function ProgressionTimeline() {
             >
               <Image
                 src={CHAPTER_IMAGES[active]}
-                alt={CHAPTERS[active].title}
+                alt={chapters[active].title}
                 fill
                 sizes="(max-width: 1024px) 90vw, 440px"
                 className="object-cover"

@@ -7,9 +7,12 @@ import { OrnamentDivider } from "@/components/ui/Ornament";
 import { Particles } from "@/components/ui/Particles";
 import { StoreBadge } from "@/components/ui/StoreBadge";
 import { DeviceFrame } from "@/components/ui/DeviceFrame";
-import { GAME, STATS } from "@/lib/content";
+import { GAME } from "@/lib/content";
+import { useLanguage } from "@/components/layout/LanguageProvider";
 
 export function CTA() {
+  const { copy, isArabic } = useLanguage();
+
   return (
     <section className="relative overflow-hidden py-28 sm:py-36">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/30 to-transparent" />
@@ -23,35 +26,36 @@ export function CTA() {
           <Particles count={20} />
 
           <div className="relative grid items-center gap-12 lg:grid-cols-[1.3fr_0.7fr]">
-            <div className="text-center lg:text-left">
+            <div className="text-center lg:text-start">
               <Reveal direction="up">
                 <span className="inline-flex items-center gap-2 rounded-full border border-gold-400/25 bg-plum-900/50 px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-gold-200">
                   <ShieldCheck className="h-3.5 w-3.5" />
-                  Free to play · No pay-to-win
+                  {copy.cta.badge}
                 </span>
               </Reveal>
 
               <Reveal direction="up" delay={0.08}>
                 <h2 className="mt-6 font-display text-4xl font-bold leading-[1.02] text-parch-50 sm:text-5xl lg:text-6xl">
-                  The horde is coming.
-                  <span className="block text-gold-foil">Will your reign endure?</span>
+                  {copy.cta.titleLine1}
+                  <span className="block text-gold-foil">
+                    {copy.cta.titleLine2}
+                  </span>
                 </h2>
               </Reveal>
 
               <Reveal direction="up" delay={0.16}>
                 <p
-                  dir="rtl"
-                  lang="ar"
+                  dir={isArabic ? "rtl" : "ltr"}
+                  lang={isArabic ? "ar" : "en"}
                   className="mt-4 font-arabic text-xl text-gold-300/70"
                 >
-                  {GAME.nameArabic}
+                  {isArabic ? GAME.nameArabic : GAME.name}
                 </p>
               </Reveal>
 
               <Reveal direction="up" delay={0.2}>
                 <p className="mx-auto mt-5 max-w-xl text-base text-parch-200 lg:mx-0">
-                  Download {GAME.name} and take your throne. Join millions of
-                  rulers already defending the realm.
+                  {copy.cta.description}
                 </p>
               </Reveal>
 
@@ -64,8 +68,13 @@ export function CTA() {
 
               <Reveal direction="up" delay={0.34}>
                 <div className="mt-10 flex items-center justify-center gap-8 lg:justify-start">
-                  {STATS.map((s) => (
-                    <div key={s.label} className="text-center lg:text-left">
+                  {[
+                    { value: "4.2★", label: copy.cta.statsLabels[0] },
+                    { value: "Free", label: copy.cta.statsLabels[1] },
+                    { value: "120+", label: copy.cta.statsLabels[2] },
+                    { value: "24/7", label: copy.cta.statsLabels[3] },
+                  ].map((s) => (
+                    <div key={s.label} className="text-center lg:text-start">
                       <p className="font-display text-2xl font-bold text-parch-50">
                         {s.value}
                       </p>
