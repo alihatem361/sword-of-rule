@@ -37,7 +37,7 @@ const DESCRIPTION =
   "Sword of Rule — a cinematic strategy MMO set on the eve of the Tatar invasion. Build your kingdom, command legendary heroes and lead your alliance to victory.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sword-of-rule.example"),
+  metadataBase: new URL("https://sword-of-rule.vercel.app"),
   title: {
     default: "Sword of Rule — Forge an Empire. Outlast the Horde.",
     template: "%s · Sword of Rule",
