@@ -147,7 +147,7 @@ type CharactersCopy = {
 };
 
 type SiteCopy = {
-  nav: { links: NavLink[] };
+  nav: { links: readonly NavLink[] };
   hero: HeroCopy;
   overview: OverviewCopy;
   features: FeaturesCopy;
