@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cinzel, Inter, Tajawal, Amiri } from "next/font/google";
 import { GAME } from "@/lib/content";
 import { LanguageProvider } from "@/components/layout/LanguageProvider";
+import { TrailerProvider } from "@/components/layout/TrailerContext";
 import "./globals.css";
 
 const cinzel = Cinzel({
@@ -105,7 +106,9 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <TrailerProvider>{children}</TrailerProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

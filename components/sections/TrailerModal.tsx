@@ -4,27 +4,25 @@ import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { TRAILER_VIDEO_SRC, TRAILER_POSTER_SRC } from "@/lib/content";
-import { useSearchParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/components/layout/LanguageProvider";
-
+import { useTrailer } from "@/components/layout/TrailerContext";
 /** Fullscreen popup that plays the real cinematic clip, with sound. */
 export function TrailerModal() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
   const { copy, isArabic } = useLanguage();
+  const { isTrailerOpen, closeTrailer } = useTrailer();
 
-  const isOpen = searchParams.get("trailer") === "true";
+  const isOpen = isTrailerOpen;
 
   const closeModal = () => {
-    router.replace("/", { scroll: false });
+    closeTrailer();
   };
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeModal();
-    if (isOpen) {
+    if (isTrailerOpen) {
       window.addEventListener("keydown", onKey);
       document.body.style.overflow = "hidden";
       videoRef.current?.play().catch(() => {
@@ -41,9 +39,7 @@ export function TrailerModal() {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [isOpen, closeModal]);
-
-  if (!isOpen) return null;
+  }, [isTrailerOpen]);
 
   return (
     <AnimatePresence>
